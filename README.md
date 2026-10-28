@@ -41,7 +41,7 @@ Konsol düzeyinde komut çalıştırır ve çıktısını settle süresiyle yaka
 **İstek:**
 ```http
 POST /api/v1/command HTTP/1.1
-Host: 127.0.0.1:8080
+Host: 127.0.0.1:8923
 Authorization: Basic cm9vdDpjb25zb2xlX3NlY3JldA==
 Content-Type: application/json
 
@@ -109,3 +109,4 @@ Derlenen `.jar` dosyasını Velocity sunucunuzun `plugins/` dizinine yerleştiri
 ## 📄 Lisans
 
 Bu proje **GNU General Public License v3.0 or later (GPL-v3+)** ile lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakabilirsiniz.
+
