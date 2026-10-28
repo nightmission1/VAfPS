@@ -21,11 +21,32 @@ jobs:
         distribution: 'temurin'
         cache: 'maven'
 
-    - name: Build and Test with Maven
+    - name: Import GPG key
+      if: "${{ env.GPG_KEY != '' }}"
+      uses: crazy-max/ghaction-import-gpg@v6
+      with:
+        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      env:
+        GPG_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
+    - name: Build and Sign Plugin with Maven (if GPG key present)
+      if: "${{ env.GPG_KEY != '' }}"
+      run: mvn clean verify -P release --batch-mode
+      env:
+        GPG_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+    - name: Build and Test Plugin with Maven (fallback without signing)
+      if: "${{ env.GPG_KEY == '' }}"
       run: mvn clean verify --batch-mode
+      env:
+        GPG_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
     - name: Upload Plugin Artifact
       uses: actions/upload-artifact@v4
       with:
         name: vafps-velocity-plugin
-        path: target/*.jar
+        path: |
+          target/*.jar
+          target/*.asc
