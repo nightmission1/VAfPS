@@ -135,4 +135,36 @@ class VafpsHttpServiceIntegrationTest {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(401, response.statusCode()); // admin tanımlı değil -> 401
     }
+
+    @Test
+    @DisplayName("Internal health check requires valid token and works regardless of CIDR")
+    void testInternalHealthEndpoint() throws Exception {
+        // Without token -> 403
+        HttpRequest requestNoToken = HttpRequest.newBuilder()
+                .uri(URI.create("http://127.0.0.1:" + port + "/api/v1/internal-health"))
+                .GET()
+                .build();
+        HttpResponse<String> respNoToken = httpClient.send(requestNoToken, HttpResponse.BodyHandlers.ofString());
+        assertEquals(403, respNoToken.statusCode());
+        assertTrue(respNoToken.body().contains("X-Internal-Health-Token"));
+
+        // With invalid token -> 403
+        HttpRequest requestInvalidToken = HttpRequest.newBuilder()
+                .uri(URI.create("http://127.0.0.1:" + port + "/api/v1/internal-health"))
+                .header("X-Internal-Health-Token", "invalid_token_123")
+                .GET()
+                .build();
+        HttpResponse<String> respInvalid = httpClient.send(requestInvalidToken, HttpResponse.BodyHandlers.ofString());
+        assertEquals(403, respInvalid.statusCode());
+
+        // With valid token -> 200 OK
+        HttpRequest requestValid = HttpRequest.newBuilder()
+                .uri(URI.create("http://127.0.0.1:" + port + "/api/v1/internal-health"))
+                .header("X-Internal-Health-Token", service.getInternalHealthToken())
+                .GET()
+                .build();
+        HttpResponse<String> respValid = httpClient.send(requestValid, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, respValid.statusCode());
+        assertTrue(respValid.body().contains("\"status\":\"OK\""));
+    }
 }

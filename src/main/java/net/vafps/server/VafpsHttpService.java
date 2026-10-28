@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -45,6 +46,7 @@ public class VafpsHttpService {
     private final Locale outputLocale;
     private final boolean logCommandArgs;
     private final long startedAt;
+    private final String internalHealthToken;
 
     private HttpServer httpServer;
     private ThreadPoolExecutor executor;
@@ -88,6 +90,11 @@ public class VafpsHttpService {
         this.outputLocale = outputLocale != null ? outputLocale : Locale.US;
         this.logCommandArgs = logCommandArgs;
         this.startedAt = System.currentTimeMillis();
+        this.internalHealthToken = UUID.randomUUID().toString().replace("-", "");
+    }
+
+    public String getInternalHealthToken() {
+        return internalHealthToken;
     }
 
     public synchronized void start(String host, int port) throws IOException {
@@ -399,11 +406,20 @@ public class VafpsHttpService {
     private class InternalHealthHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            InetAddress remoteAddress = exchange.getRemoteAddress().getAddress();
-            if (!networkShield.isAllowed(remoteAddress)) {
-                sendJson(exchange, 403, new ErrorResponse("NETWORK_DENIED", "Kaynak IP izin verilen ag araliginda degil."), true);
+            // Bypass CIDR check, but strictly require constant-time valid X-Internal-Health-Token
+            String providedToken = exchange.getRequestHeaders().getFirst("X-Internal-Health-Token");
+            if (providedToken == null) {
+                sendJson(exchange, 403, new ErrorResponse("FORBIDDEN", "X-Internal-Health-Token basligi zorunludur."), true);
                 return;
             }
+
+            byte[] providedBytes = providedToken.getBytes(StandardCharsets.UTF_8);
+            byte[] actualBytes = internalHealthToken.getBytes(StandardCharsets.UTF_8);
+            if (!MessageDigest.isEqual(providedBytes, actualBytes)) {
+                sendJson(exchange, 403, new ErrorResponse("FORBIDDEN", "Gecersiz saglik denetim tokeni."), true);
+                return;
+            }
+
             if (!"GET".equalsIgnoreCase(exchange.getRequestMethod())) {
                 sendJson(exchange, 405, new ErrorResponse("METHOD_NOT_ALLOWED", "Yalnizca GET desteklenir."), false);
                 return;
