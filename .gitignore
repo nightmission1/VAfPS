@@ -1,0 +1,13 @@
+target/
+.gradle/
+gradle/
+*.class
+*.jar
+.root_disabled
+START
+
+# Agent and internal docs
+.agents/
+*.md
+!README.md
+
