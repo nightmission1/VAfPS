@@ -106,8 +106,7 @@ Derlenen `.jar` dosyasını Velocity sunucunuzun `plugins/` dizinine yerleştiri
 
 ---
 
-## 📄 Lisans & Yazar
+## 📄 Lisans
 
-- **Geliştirici:** NightMission
-- **Lisans:** GNU General Public License v3.0 or later (GPL-v3+). Detaylar için [LICENSE](LICENSE) dosyasına bakabilirsiniz.
+Bu proje **GNU General Public License v3.0 or later (GPL-v3+)** ile lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakabilirsiniz.
 
