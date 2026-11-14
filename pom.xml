@@ -11,6 +11,13 @@
     <name>VAfPS</name>
     <description>Velocity API for Paper Server</description>
 
+    <developers>
+        <developer>
+            <id>nightmission</id>
+            <name>NightMission</name>
+        </developer>
+    </developers>
+
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
