@@ -5,7 +5,7 @@
 
     <groupId>net.vafps</groupId>
     <artifactId>vafps</artifactId>
-    <version>2.7-RC</version>
+    <version>2.7.0</version>
     <packaging>jar</packaging>
 
     <name>VAfPS</name>

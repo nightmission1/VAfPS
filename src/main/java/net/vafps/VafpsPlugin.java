@@ -24,7 +24,7 @@ import java.util.Map;
 @Plugin(
         id = "vafps",
         name = "VAfPS",
-        version = "2.7-RC",
+        version = "2.7.0",
         description = "Velocity API for Paper Server",
         authors = {"NightMission"}
 )
