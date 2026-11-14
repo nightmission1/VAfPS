@@ -43,13 +43,11 @@ class VafpsHttpServiceIntegrationTest {
     void setUp() throws Exception {
         proxyServer = Mockito.mock(ProxyServer.class);
         commandManager = Mockito.mock(CommandManager.class);
-        ProxyVersion proxyVersion = Mockito.mock(ProxyVersion.class);
+        ProxyVersion proxyVersion = new ProxyVersion("Velocity", "PaperMC", "3.4.0-SNAPSHOT");
 
         when(proxyServer.getCommandManager()).thenReturn(commandManager);
         when(proxyServer.getVersion()).thenReturn(proxyVersion);
         when(proxyServer.getPlayerCount()).thenReturn(42);
-        when(proxyVersion.getName()).thenReturn("Velocity");
-        when(proxyVersion.getVersion()).thenReturn("3.4.0-SNAPSHOT");
 
         NetworkShield shield = new NetworkShield(true, List.of("127.0.0.0/8", "::1/128"));
         Map<String, AccountConfig> accounts = new HashMap<>();
