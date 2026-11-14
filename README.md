@@ -106,6 +106,16 @@ Derlenen `.jar` dosyasını Velocity sunucunuzun `plugins/` dizinine yerleştiri
 
 ---
 
+## 🛠️ For Developers (Client SDK)
+
+Paper/Spigot sunucularınızdan veya harici Java uygulamalarınızdan VAfPS API köprüsüne tip güvenli, asenkron ve kolay bir şekilde bağlanmak için resmi Java SDK'sını kullanabilirsiniz:
+
+👉 **[vafps-client-sdk Repository](https://github.com/nightmission1/vafps-client-sdk)**
+
+SDK; bağlantı yönetimi, kimlik doğrulama, rate limiting toleransı ve yanıt ayrıştırma işlemlerini otomatikleştirir.
+
+---
+
 ## 📄 Lisans
 
 Bu proje **GNU General Public License v3.0 or later (GPL-v3+)** ile lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakabilirsiniz.
